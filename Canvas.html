@@ -1,77 +1,191 @@
-<html>
+﻿<html>
 <head>
 <meta charset="utf-8"/>
 </head>
 <body>
-
-	<script type="text/javascript">
-		function f1(spn)
-		{
-			if(img_exp.style.display=='') 
-			{
-				img_exp.style.display='none';
-				spn.innerHTML = 'לחץ/י כאן להצגת הסבר';
-			}
-			else 
-			{
-				img_exp.style.display='';
-				spn.innerHTML = 'לחץ/י כאן להסתרת ההסבר';
-			}
+	<style>
+		.controlButtons input {
+			cursor: pointer;
 		}
-	</script>
-    <div align="center" dir="ltr">
-        <table id="tblColors">
+		/* The Modal (background) */
+		.modal {
+			display: none; /* Hidden by default */
+			position: fixed; /* Stay in place */
+			z-index: 1; /* Sit on top */
+			left: 0;
+			top: 0;
+			width: 100%; /* Full width */
+			height: 100%; /* Full height */
+			overflow: auto; /* Enable scroll if needed */
+			background-color: rgb(0,0,0); /* Fallback color */
+			background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+		/* Modal Content/Box */
+		.modal-content {
+			background-color: #fefefe;
+			margin: 15% auto; /* 15% from the top and centered */
+			padding: 20px;
+			border: 1px solid #888;
+			width: 80%; /* Could be more or less, depending on screen size */
+		}
+
+		/* The Close Button */
+		.close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+			.close:hover,
+			.close:focus {
+				color: black;
+				text-decoration: none;
+				cursor: pointer;
+			}
+	</style>
+	<div id="myModal1" class="modal">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<span class="close" title="סגור">&times;</span>
+			<p style="align-content:center;"><center><img src="pkudot.png" /></center></p>
+		</div>
+	</div>
+	<div id="myModal2" class="modal">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<span class="close" title="סגור">&times;</span>
+			<p style="align-content:center;"><center><img src="coords.png" /></center></p>
+		</div>
+	</div>
+	<div align="center" dir="ltr">
+		<table id="tblColors">
 			<tr>
 				<td style="border:1px solid green;font-weight:bold;color:blue;" align="center" valign="top">
-				<span style="cursor:hand;" onclick="f1(this);">לחץ/י כאן להצגת הסבר</span>
-				<br/>
-					<img src="explanations.png" width="500" height="500" id="img_exp" style="display:none;"/>
+					<table dir="rtl" style="width:120px;">
+						<tr>
+							<th style="color:blue;">נסו לשרטט</th>
+						</tr>
+						<tr><th style="padding-top:20px;">2. דובי</th></tr>
+						<tr>
+							<td align="center"><img src="dubi.png" width="100" height="100" /></td>
+						</tr>
+					</table>
 				</td>
 				<td>
 					<table>
 						<tr>
 							<td>
-								<canvas id="canvas" width="600" height="400" style="border:1px solid #FF0000"></canvas><br/><br/>
+								<div style="border:1px solid blue;">
+									<div dir="rtl" style="font-style:italic;font-weight:bold;text-align:center;">
+										כאן יש לכתוב את הפקודות לשרטוט צורות
+										<a href="javascript:ShowModal('myModal1', this);" style="cursor:pointer;" title="הצג הסבר על הפקודות"><img src="qm.png" width="15" height="15" /></a>
+									</div>
+									<hr style="width:80%;" />
+									<textarea id="txtArea" style="width:600px;height:200px;white-space:wrap;border:0px solid red;" placeholder="write your code here"></textarea>
+									<div id="tdColors"></div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td align="center" style="padding-top:20px;padding-bottom:20px;" class="controlButtons">
+								<input type="button" onclick="AddRInst();" value="פקודת מלבן" title="הוספת פקודה לשרטוט מלבן" />
+								<input type="button" onclick="AddCInst();" value="פקודת עיגול" title="הוספת פקודה לשרטוט עיגול" />
+								<input type="button" id="clearButton" onclick="drawObject.clearRect(0, 0, canvas.width, canvas.height);" value="נקה קנבס" title="מחיקת הצורות המשורטטות במסגרת האדומה" />
+								<input type="button" id="testButton" onclick="TestScript();" value="הרץ קוד" title="הפקודות המופיעות במסגרת הכחולה יתורגמו לצורות במסגרת האדומה" />
 							</td>
 						</tr>
 						<tr>
 							<td>
-					<textarea id="txtArea" style="width:600px;height:200px;border:1px solid blue;white-space:wrap;" placeholder="write your code here">
-DrawCircle(100, 150, 80, "red");
-DrawRectangle(500, 150, 80, 60, "blue");</textarea>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="button" id="testButton" onclick="TestScript();" value="Draw" />
-								<input type="button" id="clearButton" onclick="drawObject.clearRect(0, 0, canvas.width, canvas.height);" value="Clear"/>
+								<div style="border:1px solid red;">
+									<div dir="rtl" style="font-style:italic;font-weight:bold;text-align:center;">
+										כאן תוצג תוצאת הרצת הקוד לאחר לחיצה על כפתור "הרץ קוד"
+										<a href="javascript:ShowModal('myModal2', this);" style="cursor:pointer;" title="הצג הסבר על מידות הקנבס"><img src="qm.png" width="15" height="15" /></a>
+									</div>
+									<hr style="width:80%;" />
+									<canvas id="canvas" width="600" height="400"></canvas><br /><br />
+								</div>
 							</td>
 						</tr>
 					</table>
 				</td>
 				<td style="border:1px solid green;font-weight:bold;color:blue;" align="center" valign="top">
-					<table dir="rtl">
+					<table dir="rtl" style="width:120px;">
 						<tr>
-							<th style="color:blue;">נסו לשרטט את הבאים</th>
+							<th style="color:blue;">נסו לשרטט</th>
 						</tr>
 						<tr><th style="padding-top:20px;">1. רמזור</th></tr>
 						<tr>
-							<td align="center"><img src="traffic_light_2.png" width="60" height="180"/></td>
-						</tr>
-						<tr><th style="padding-top:20px;">2. דובי</th></tr>
-						<tr>
-							<td align="center"><img src="dubi.png" width="100" height="100"/></td>
+							<td align="center"><img src="traffic_light_2.png" width="60" height="180" /></td>
 						</tr>
 					</table>
 				</td>
 			</tr>
-        </table>
+		</table>
 	</div>
 </body>
 </html>
 <script language="javascript">
-    //שתי השורות הבאות קבועות ואין לשנות אותן
     var canvas = document.getElementById("canvas");
+    var cwidth = canvas.width;
+    var cheight = canvas.height;
+
+	var colors = ["red", "green", "blue", "brown", "white", "black", "yellow", "orange", "pink", "purple", "gray"];
+	Init();
+	function Init()
+	{
+		AddColors();
+		AddCInst();
+		AddRInst();
+    }
+
+	function rand(x, y)
+	{
+		return Math.floor(Math.random() * y) + x;
+	}
+
+	function AddCInst()
+	{
+		var ci = rand(0, colors.length - 1);
+		var c = "\"" + colors[ci] + "\"";
+		var r = rand(20, 80);
+		var r2 = r * 2;
+        var x = rand(r2, cwidth - r2);
+        var y = rand(r2, cheight - r2);
+		var command = `DrawCircle(${x}, ${y}, ${r}, ${c});`;
+
+		txtArea.innerHTML += "\n" + command;
+    }
+
+    function AddRInst() {
+        var ci = rand(0, colors.length - 1);
+        var c = "\"" + colors[ci] + "\"";
+        var w = rand(20, 100);
+        var h = rand(20, 100);
+        var x = rand(w, cwidth - w);
+        var y = rand(h, cheight - h);
+        var command = `DrawRectangle(${x}, ${y}, ${w}, ${h}, ${c});`;
+        txtArea.innerHTML += "\n" + command;
+    }
+	function AddColors()
+	{
+        var td = document.getElementById("tdColors");
+		var c1 = cwidth / colors.length;
+		//alert(c1);
+		for (var i = 0; i < colors.length; i++) {
+			var s = document.createElement("span");
+			s.style.display = "inline-block";
+			s.style.width = c1 + "px";
+			s.innerHTML = "&nbsp;";
+			s.style.backgroundColor = colors[i];
+			s.style.cursor = "pointer";
+			s.title = colors[i];
+			td.appendChild(s);
+        }
+
+    }
+
     var drawObject = canvas.getContext('2d');
     var myInput = document.getElementById("txtArea");
     if (myInput.addEventListener) 
@@ -95,26 +209,36 @@ DrawRectangle(500, 150, 80, 60, "blue");</textarea>
 
     function DrawRectangle(x, y, width, height, color)
     {
-        drawObject.beginPath();									//כדי להתחיל לשרטט קו יש לבצע זאת
-        drawObject.fillStyle = color;           				//הגדרת צבע המילוי
+        drawObject.beginPath();									
+        drawObject.fillStyle = color;           			
         drawObject.rect(x, y, width, height);
-        drawObject.fill();										//מילוי שטח העיגול בצבע שהוגדר קודם לכן
-        drawObject.closePath();									//בסיום שרטוט קו יש לבצע זאת
+        drawObject.fill();										
+        drawObject.closePath();									
     }
 
     function DrawCircle(x, y, radius, color) {
-        //חמש ההוראות הבאות מציירות עיגול צהוב במרכז
-        drawObject.beginPath();									//כדי להתחיל לשרטט קו יש לבצע זאת
-        drawObject.fillStyle = color;           				//הגדרת צבע המילוי
-        drawObject.arc(x, y, radius, 0, 2 * Math.PI);   		//שרטוט קשת - מיקום נקודת האמצע, גודל הרדיוס, וגודל הקשת ברדיאנים
-        drawObject.fill();										//מילוי שטח העיגול בצבע שהוגדר קודם לכן
-        drawObject.closePath();									//בסיום שרטוט קו יש לבצע זאת
+        drawObject.beginPath();									
+        drawObject.fillStyle = color;           				
+        drawObject.arc(x, y, radius, 0, 2 * Math.PI);   		
+        drawObject.fill();										
+        drawObject.closePath();									
 
-        //arc המשמעות של כל פרמטר בפעולה
-        //parameter #1: x position
-        //parameter #2: y position
-        //parameter #3: where the arc (keshet) starts
-        //parameter #4: where the arc (keshet) ends
-        //drawObject.arc(x, y, radius, 0 , 2 * Math.PI);
+	}
+
+	function ShowModal(modalId, btn)
+	{
+        var modal = document.getElementById(modalId);
+        modal.style.display = "block";
+		var spans = document.getElementsByClassName("close");
+		for (var i = 0; i < spans.length; i++)
+		spans[i].onclick = function () {
+            modal.style.display = "none";
+        }
+
+        }
+		window.onclick += function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
     }
 </script>
