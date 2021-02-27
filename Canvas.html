@@ -141,8 +141,8 @@
 		var c = "\"" + colors[ci] + "\"";
 		var r = rand(20, 80);
 		var r2 = r * 2;
-        var x = rand(r2, cwidth - r2);
-        var y = rand(r2, cheight - r2);
+        var x = rand(r, cwidth - r2);
+        var y = rand(r, cheight - r2);
 		var command = `DrawCircle(${x}, ${y}, ${r}, ${c});`;
 
         txtarea.value += "\n" + command;
@@ -151,10 +151,10 @@
     function AddRInst() {
         var ci = rand(0, colors.length - 1);
         var c = "\"" + colors[ci] + "\"";
-        var w = rand(20, 100);
-        var h = rand(20, 100);
-        var x = rand(w, cwidth - w);
-        var y = rand(h, cheight - h);
+        var w = rand(50, 200);
+        var h = rand(50, 200);
+        var x = rand(w, cwidth - 2 * w);
+        var y = rand(h, cheight - 2 * h);
         var command = `DrawRectangle(${x}, ${y}, ${w}, ${h}, ${c});`;
         txtarea.value += "\n" + command;
     }
