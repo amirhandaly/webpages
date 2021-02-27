@@ -153,8 +153,8 @@
         var c = "\"" + colors[ci] + "\"";
         var w = rand(50, 200);
         var h = rand(50, 200);
-        var x = rand(w, cwidth - 2 * w);
-        var y = rand(h, cheight - 2 * h);
+        var x = rand(0, cwidth - w);
+        var y = rand(0, cheight - h);
         var command = `DrawRectangle(${x}, ${y}, ${w}, ${h}, ${c});`;
         txtarea.value += "\n" + command;
     }
