@@ -1,0 +1,120 @@
+<html>
+<head>
+<meta charset="utf-8"/>
+</head>
+<body>
+
+	<script type="text/javascript">
+		function f1(spn)
+		{
+			if(img_exp.style.display=='') 
+			{
+				img_exp.style.display='none';
+				spn.innerHTML = 'לחץ/י כאן להצגת הסבר';
+			}
+			else 
+			{
+				img_exp.style.display='';
+				spn.innerHTML = 'לחץ/י כאן להסתרת ההסבר';
+			}
+		}
+	</script>
+    <div align="center" dir="ltr">
+        <table id="tblColors">
+			<tr>
+				<td style="border:1px solid green;font-weight:bold;color:blue;" align="center" valign="top">
+				<span style="cursor:hand;" onclick="f1(this);">לחץ/י כאן להצגת הסבר</span>
+				<br/>
+					<img src="explanations.png" width="500" height="500" id="img_exp" style="display:none;"/>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<canvas id="canvas" width="600" height="400" style="border:1px solid #FF0000"></canvas><br/><br/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+					<textarea id="txtArea" style="width:600px;height:200px;border:1px solid blue;white-space:wrap;" placeholder="write your code here">
+DrawCircle(100, 150, 80, "red");
+DrawRectangle(500, 150, 80, 60, "blue");</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="button" id="testButton" onclick="TestScript();" value="Draw" />
+								<input type="button" id="clearButton" onclick="drawObject.clearRect(0, 0, canvas.width, canvas.height);" value="Clear"/>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td style="border:1px solid green;font-weight:bold;color:blue;" align="center" valign="top">
+					<table dir="rtl">
+						<tr>
+							<th style="color:blue;">נסו לשרטט את הבאים</th>
+						</tr>
+						<tr><th style="padding-top:20px;">1. רמזור</th></tr>
+						<tr>
+							<td align="center"><img src="traffic_light_2.png" width="60" height="180"/></td>
+						</tr>
+						<tr><th style="padding-top:20px;">2. דובי</th></tr>
+						<tr>
+							<td align="center"><img src="dubi.png" width="100" height="100"/></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+        </table>
+	</div>
+</body>
+</html>
+<script language="javascript">
+    //שתי השורות הבאות קבועות ואין לשנות אותן
+    var canvas = document.getElementById("canvas");
+    var drawObject = canvas.getContext('2d');
+    var myInput = document.getElementById("txtArea");
+    if (myInput.addEventListener) 
+	{
+        myInput.addEventListener('keydown', this.keyHandler, false);
+	}
+    function keyHandler(e) {
+        var TABKEY = 9;
+        if (e.keyCode == TABKEY) {
+            this.value += "    ";
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            return false;
+        }
+    }
+    function TestScript()
+    {
+        eval(txtArea.value);
+    }
+
+    function DrawRectangle(x, y, width, height, color)
+    {
+        drawObject.beginPath();									//כדי להתחיל לשרטט קו יש לבצע זאת
+        drawObject.fillStyle = color;           				//הגדרת צבע המילוי
+        drawObject.rect(x, y, width, height);
+        drawObject.fill();										//מילוי שטח העיגול בצבע שהוגדר קודם לכן
+        drawObject.closePath();									//בסיום שרטוט קו יש לבצע זאת
+    }
+
+    function DrawCircle(x, y, radius, color) {
+        //חמש ההוראות הבאות מציירות עיגול צהוב במרכז
+        drawObject.beginPath();									//כדי להתחיל לשרטט קו יש לבצע זאת
+        drawObject.fillStyle = color;           				//הגדרת צבע המילוי
+        drawObject.arc(x, y, radius, 0, 2 * Math.PI);   		//שרטוט קשת - מיקום נקודת האמצע, גודל הרדיוס, וגודל הקשת ברדיאנים
+        drawObject.fill();										//מילוי שטח העיגול בצבע שהוגדר קודם לכן
+        drawObject.closePath();									//בסיום שרטוט קו יש לבצע זאת
+
+        //arc המשמעות של כל פרמטר בפעולה
+        //parameter #1: x position
+        //parameter #2: y position
+        //parameter #3: where the arc (keshet) starts
+        //parameter #4: where the arc (keshet) ends
+        //drawObject.arc(x, y, radius, 0 , 2 * Math.PI);
+    }
+</script>
