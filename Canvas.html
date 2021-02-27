@@ -93,6 +93,7 @@
 								<input type="button" onclick="AddRInst();" value="פקודת מלבן" title="הוספת פקודה לשרטוט מלבן" />
 								<input type="button" onclick="AddCInst();" value="פקודת עיגול" title="הוספת פקודה לשרטוט עיגול" />
 								<input type="button" id="clearButton" onclick="drawObject.clearRect(0, 0, canvas.width, canvas.height);" value="נקה קנבס" title="מחיקת הצורות המשורטטות במסגרת האדומה" />
+								<input type="button" onclick="ClearCode();" value="מחיקת קוד" title="הקוד במסגרת הכחולה ימחק" />
 								<input type="button" id="testButton" onclick="TestScript();" value="הרץ קוד" title="הפקודות המופיעות במסגרת הכחולה יתורגמו לצורות במסגרת האדומה" />
 							</td>
 						</tr>
@@ -240,5 +241,17 @@
         if (event.target == modal) {
             modal.style.display = "none";
         }
+	}
+
+	function ClearCode() {
+		var msg = "לחיצה על אישור תגרום למחיקת כל הקוד והוא יאבד לצמיתות.";
+		msg += "\n";
+        msg += "יש ללחוץ על ביטול אם התחרטת.";
+
+		if (confirm(msg))
+		{
+			txtArea.innerHTML = "";
+        }			
     }
+
 </script>
