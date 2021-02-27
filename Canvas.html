@@ -123,6 +123,8 @@
     var cwidth = canvas.width;
 	var cheight = canvas.height;
 	var selectedColor = -1;
+	var prevS = null;
+	var c1 = 0;
 
 	var colors = ["red", "green", "blue", "brown", "white", "black", "yellow", "orange", "pink", "purple", "gray"];
 	Init();
@@ -169,7 +171,7 @@
 	function AddColors()
 	{
         var td = document.getElementById("tdColors");
-		var c1 = cwidth / colors.length;
+		c1 = cwidth / colors.length;
 		//alert(c1);
 		for (var i = 0; i < colors.length; i++) {
 			var s = document.createElement("span");
@@ -190,7 +192,16 @@
 	{
 		if (s.getAttribute("clicked") == "0")
 		{
+			if (prevS != null)
+			{
+                prevS.style.width = (c1 + 4) + "px";
+                prevS.style.border = "";
+                prevS.setAttribute("clicked", "0");
+			}
+			prevS = s;
 			s.setAttribute("clicked", "1");
+			s.style.border = "2px solid gold";
+			s.style.width = (c1 - 4) + "px";
 			selectedColor = parseInt(s.getAttribute("ci"));
             addC.style.border = "1px solid " + colors[selectedColor];
             addC.style.color = colors[selectedColor];
@@ -199,6 +210,9 @@
 		}
 		else
 		{
+			prevS = null;
+            s.style.width = (c1 + 4) + "px";
+            s.style.border = "";
             s.setAttribute("clicked", "0");
             selectedColor = -1
             addC.style.border = "";
