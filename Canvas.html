@@ -73,43 +73,31 @@
 						</tr>
 					</table>
 				</td>
-				<td>
-					<table>
-						<tr>
-							<td>
-								<div style="border:1px solid blue;">
-									<div dir="rtl" style="font-style:italic;font-weight:bold;text-align:center;">
-										כאן יש לכתוב את הפקודות לשרטוט צורות
-										<a href="javascript:ShowModal('myModal1', this);" style="cursor:pointer;" title="הצג הסבר על הפקודות"><img src="qm.png" width="15" height="15" /></a>
-									</div>
-									<hr style="width:80%;" />
-									<textarea id="txtArea" style="width:600px;height:200px;white-space:wrap;border:0px solid red;" placeholder="write your code here"></textarea>
-									<div id="tdColors"></div>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td align="center" style="padding-top:20px;padding-bottom:20px;" class="controlButtons">
-								<input type="button" onclick="AddRInst();" value="פקודת מלבן" title="הוספת פקודה לשרטוט מלבן" />
-								<input type="button" onclick="AddCInst();" value="פקודת עיגול" title="הוספת פקודה לשרטוט עיגול" />
-								<input type="button" id="clearButton" onclick="drawObject.clearRect(0, 0, canvas.width, canvas.height);" value="נקה קנבס" title="מחיקת הצורות המשורטטות במסגרת האדומה" />
-								<input type="button" onclick="ClearCode();" value="מחיקת קוד" title="הקוד במסגרת הכחולה ימחק" />
-								<input type="button" id="testButton" onclick="TestScript();" value="הרץ קוד" title="הפקודות המופיעות במסגרת הכחולה יתורגמו לצורות במסגרת האדומה" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div style="border:1px solid red;">
-									<div dir="rtl" style="font-style:italic;font-weight:bold;text-align:center;">
-										כאן תוצג תוצאת הרצת הקוד לאחר לחיצה על כפתור "הרץ קוד"
-										<a href="javascript:ShowModal('myModal2', this);" style="cursor:pointer;" title="הצג הסבר על מידות הקנבס"><img src="qm.png" width="15" height="15" /></a>
-									</div>
-									<hr style="width:80%;" />
-									<canvas id="canvas" width="600" height="400"></canvas><br /><br />
-								</div>
-							</td>
-						</tr>
-					</table>
+				<td valign="top">
+					<div style="border:1px solid blue;">
+						<div dir="rtl" style="font-style:italic;font-weight:bold;text-align:center;">
+							כאן יש לכתוב את הפקודות לשרטוט צורות
+							<a href="javascript:ShowModal('myModal1', this);" style="cursor:pointer;" title="הצג הסבר על הפקודות"><img src="qm.png" width="15" height="15" /></a>
+						</div>
+						<hr style="width:80%;" />
+						<textarea id="txtArea" style="width:600px;height:200px;white-space:wrap;border:0px solid red;resize:none;" placeholder="write your code here"></textarea>
+						<div id="tdColors"></div>
+					</div>
+					<div align="center" style="padding-top:20px;padding-bottom:20px;" class="controlButtons">
+						<input type="button" onclick="AddRInst();" value="פקודת מלבן" title="הוספת פקודה לשרטוט מלבן" />
+						<input type="button" onclick="AddCInst();" value="פקודת עיגול" title="הוספת פקודה לשרטוט עיגול" />
+						<input type="button" id="clearButton" onclick="drawObject.clearRect(0, 0, canvas.width, canvas.height);" value="נקה קנבס" title="מחיקת הצורות המשורטטות במסגרת האדומה" />
+						<input type="button" onclick="ClearCode();" value="מחיקת קוד" title="הקוד במסגרת הכחולה ימחק" />
+						<input type="button" id="testButton" onclick="TestScript();" value="הרץ קוד" title="הפקודות המופיעות במסגרת הכחולה יתורגמו לצורות במסגרת האדומה" />
+					</div>
+					<div style="border:1px solid red;">
+						<div dir="rtl" style="font-style:italic;font-weight:bold;text-align:center;">
+							כאן תוצג תוצאת הרצת הקוד לאחר לחיצה על כפתור "הרץ קוד"
+							<a href="javascript:ShowModal('myModal2', this);" style="cursor:pointer;" title="הצג הסבר על מידות הקנבס"><img src="qm.png" width="15" height="15" /></a>
+						</div>
+						<hr style="width:80%;" />
+						<canvas id="canvas" width="600" height="400"></canvas><br /><br />
+					</div>
 				</td>
 				<td style="border:1px solid green;font-weight:bold;color:blue;" align="center" valign="top">
 					<table dir="rtl" style="width:120px;">
