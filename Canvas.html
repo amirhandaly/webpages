@@ -6,6 +6,7 @@
 	<style>
 		.controlButtons input {
 			cursor: pointer;
+			border:1px solid gold;
 		}
 		/* The Modal (background) */
 		.modal {
@@ -60,14 +61,14 @@
 		</div>
 	</div>
 	<div align="center" dir="ltr">
-		<table id="tblColors">
+		<table id="tblColors" cellspacing="0" border="0" style="border-spacing:0px 0px;">
 			<tr>
 				<td style="border:1px solid green;font-weight:bold;color:blue;" align="center" valign="top">
 					<table dir="rtl" style="width:120px;">
 						<tr>
-							<th style="color:blue;">נסו לשרטט</th>
+							<th style="color:blue;">בבית נסו לשרטט</th>
 						</tr>
-						<tr><th style="padding-top:20px;">2. דובי</th></tr>
+						<tr><th style="padding-top:20px;">דובי</th></tr>
 						<tr>
 							<td align="center"><img src="dubi.png" width="100" height="100" /></td>
 						</tr>
@@ -102,9 +103,9 @@
 				<td style="border:1px solid green;font-weight:bold;color:blue;" align="center" valign="top">
 					<table dir="rtl" style="width:120px;">
 						<tr>
-							<th style="color:blue;">נסו לשרטט</th>
+							<th style="color:blue;">עכשיו נסו לשרטט</th>
 						</tr>
-						<tr><th style="padding-top:20px;">1. רמזור</th></tr>
+						<tr><th style="padding-top:20px;">רמזור</th></tr>
 						<tr>
 							<td align="center"><img src="traffic_light_2.png" width="60" height="180" /></td>
 						</tr>
@@ -120,16 +121,27 @@
     var canvas = document.getElementById("canvas");
     var addC = document.getElementById("addC");
     var addR = document.getElementById("addR");
+    var drawObject = canvas.getContext('2d');
     var cwidth = canvas.width;
 	var cheight = canvas.height;
 	var selectedColor = -1;
 	var prevS = null;
 	var c1 = 0;
-
+	var h1 = 20;
 	var colors = ["red", "green", "blue", "brown", "white", "black", "yellow", "orange", "pink", "purple", "gray"];
+
 	Init();
+
 	function Init()
 	{
+        if (txtarea.addEventListener) {
+            txtarea.addEventListener('keydown', this.keyHandler, false);
+        }
+        window.onclick += function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
 		AddColors();
 		AddCInst();
 		AddRInst();
@@ -168,6 +180,7 @@
         var command = `DrawRectangle(${x}, ${y}, ${w}, ${h}, ${c});`;
         txtarea.value += "\n" + command;
     }
+
 	function AddColors()
 	{
         var td = document.getElementById("tdColors");
@@ -179,6 +192,7 @@
 			s.style.width = c1 + "px";
 			s.innerHTML = "&nbsp;";
 			s.style.backgroundColor = colors[i];
+            s.style.border = "2px solid " + colors[i];
 			s.style.cursor = "pointer";
 			s.title = colors[i];
 			s.setAttribute("ci", i);
@@ -194,14 +208,13 @@
 		{
 			if (prevS != null)
 			{
-                prevS.style.width = (c1 + 4) + "px";
-                prevS.style.border = "";
+                prevS.style.borderColor = prevS.title;
                 prevS.setAttribute("clicked", "0");
 			}
 			prevS = s;
 			s.setAttribute("clicked", "1");
-			s.style.border = "2px solid gold";
-			s.style.width = (c1 - 4) + "px";
+			s.style.borderColor = "gold";
+            s.style.borderSpacing = "0px 0px 0px 0px";
 			selectedColor = parseInt(s.getAttribute("ci"));
             addC.style.border = "1px solid " + colors[selectedColor];
             addC.style.color = colors[selectedColor];
@@ -211,8 +224,7 @@
 		else
 		{
 			prevS = null;
-            s.style.width = (c1 + 4) + "px";
-            s.style.border = "";
+			s.style.borderColor = s.title;
             s.setAttribute("clicked", "0");
             selectedColor = -1
             addC.style.border = "";
@@ -223,12 +235,6 @@
 
     }
 
-    var drawObject = canvas.getContext('2d');
-    var myInput = document.getElementById("txtArea");
-    if (myInput.addEventListener) 
-	{
-        myInput.addEventListener('keydown', this.keyHandler, false);
-	}
     function keyHandler(e) {
         var TABKEY = 9;
         if (e.keyCode == TABKEY) {
@@ -239,7 +245,8 @@
             return false;
         }
     }
-    function TestScript()
+
+	function TestScript()
     {
         eval(txtarea.value);
     }
@@ -273,11 +280,6 @@
         }
 
         }
-		window.onclick += function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-	}
 
 	function ClearCode() {
 		var msg = "לחיצה על אישור תגרום למחיקת כל הקוד והוא יאבד לצמיתות.";
