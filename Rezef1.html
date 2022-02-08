@@ -1,0 +1,45 @@
+﻿<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<link rel="stylesheet" href="Styles.css"/>
+</head>
+<body>
+	<center>
+		<table style="border:1px solid black;" class="main">
+			<!--STAGE 1-->
+			<tr>
+				<th style="color:darkred;">
+					<h1>שלב א</h1>
+				</th>
+			</tr>
+			<tr>
+				<td align="center">
+					לפניך גלילים בהם כדורים צבעוניים <br /><br />
+
+					ב<b>"גליל מסודר"</b> כדורים באותו צבע נמצאים סמוך זה לזה <br />
+
+					ב<b>"גליל מפוזר"</b> כדורים מאותו צבע לא בהכרח נמצאים סמוך זה לזה <br /><br />
+
+					לכל אחד מהגלילים הבאים סמנו אם הוא <b>גליל מסודר</b> או שהוא <b>גליל מפוזר</b><br /><br />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table id="tblStage1" style="width:100%;">
+					</table>
+				</td>
+			</tr>
+			<tr id="trNext" style="display:none;">
+				<td align="center">
+					<input type="button" id="btnNS" value="שלב הבא" onclick="NextStage();" />
+				</td>
+			</tr>
+		</table>
+	</center>
+	<script type="text/javascript" src="RezefAll.js">
+	</script>
+	<script type="text/javascript" src="Rezef1.js">
+	</script>
+</body>
+</html>
