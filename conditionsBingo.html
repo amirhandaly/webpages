@@ -1,0 +1,282 @@
+
+<html>
+	<head>
+		<meta charset="UTF-8"/>	
+		<style>
+			.BingoTable td
+			{
+				border:1px dotted red;
+				height: 100px;
+				width: 200px;
+				horizontal-align:center;
+				text-align:center;
+			}
+			.BingoTable input
+			{
+				width:20px;
+			}
+		</style>
+	</head>
+	<body>
+		<table id="tblMain" align="center"style="border:1px dotted navy;width:600px;">
+			<tr>
+				<td colspan="2" style="color:navy;direction:rtl;" align="right">
+					בכל תא בטבלה ישנו ביטוי בוליאני ומתחתיו שדה בו צריך להזין ערך מספרי כלשהו עבורו ערך הביטוי יהיה "אמת". 
+                    <br/>
+                    במידה והערך נכון, צבע הרקע של התא יהפוך לירוק, ובמידה ולא לאדום.
+					<br/>
+					כאשר כל התשובות נכונות, ניתן להתקדם אל הדף הבא באמצעות לחיצה על הכפתור "הבא" בתחתית הטבלה.
+					<br/>
+                    <b>טיפ: ניתן לזוז עם מקש tab משדה הזנה אחד אל שדה ההזנה הבא. כיוון התנועה הוא משמאל לימין.</b>
+					<br/>
+					עבודה מהנה!
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center" id="tdPageNumber" style="border:1px dashed green;direction:rtl;font-weight:bold;">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<table id="tblGame" class="BingoTable">
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td align="left">
+					<input type="button" onclick="uiManager.NextPage(this);" value="הבא"/>
+				</td>
+				<td align="right">
+					<!--<input type="button" onclick="uiManager.PreviousPage();" value="הקודם"/> -->
+				</td>
+			</tr>
+		</table>
+		<script>
+			function UIManager()
+			{
+				this.GameTable = null;
+				this.PageCell = null;
+				this.AllPages = new Array();
+				this.CurrentPageIndex = 0;
+				this.Cells = new Array();
+				this.Rows = new Array();
+				this.ValidAnswers = new Array();
+				this.FirstInputField = null;
+
+				this.Init = function()
+				{
+					this.GameTable = this.GameTable == null ? document.getElementById('tblGame') : this.GameTable;
+					this.PageCell = this.PageCell == null ? document.getElementById('tdPageNumber') : this.PageCell;
+				}
+				
+				this.AddPage = function(page)
+				{
+					this.AllPages.push(page);
+				}
+				
+				this.BuildPage = function()
+				{
+					this.Init();
+
+					var page = this.AllPages[this.CurrentPageIndex];
+					var i = 0;
+					var rows = page.conditions.length/3;
+					while(i < rows)
+					{
+						var row = this.BuildRow(i, page);
+						this.GameTable.appendChild(row);
+						this.Rows.push(row);
+						++i;
+					}
+					
+					this.PageCell.innerHTML = "עמוד מספר " + (this.CurrentPageIndex + 1);
+					if(this.CurrentPageIndex == this.AllPages.length - 1)
+					{
+						this.PageCell.innerHTML += " ואחרון!";
+					}
+					
+					this.FirstInputField.focus();
+				}
+				
+				this.BuildRow = function(rowIndex, page)
+				{
+					var tr = document.createElement("tr");
+					var i = 0;
+					while(i < 3)
+					{
+						var cellIndex = rowIndex * 3 + i;
+						var td = this.BuildCell(cellIndex, page);
+						tr.appendChild(td);
+						this.ValidAnswers.push(false);
+						++i;
+					}
+					return tr;
+				}
+				
+				this.SetCellColor = function(varValue, cellIndex, validValue)
+				{
+					var color = "lightgreen";
+					if(isNaN(varValue) || !validValue)
+					{
+						validValue = false; //may be true if not a number..
+						color =  "Tomato";
+					}
+					this.Cells[cellIndex].style.backgroundColor = color;
+					this.ValidAnswers[cellIndex] = validValue;
+				}
+				
+				this.BuildCell = function(cellIndex, page)
+				{
+					var td = document.createElement("td");
+					this.Cells.push(td);
+					var tdID = 'td' + cellIndex
+					td.setAttribute('id', tdID);
+					
+					var divText = document.createElement("div");
+					divText.innerHTML = page.conditions[cellIndex];
+					td.appendChild(divText);
+
+					var divInput = document.createElement("div");
+					divInput.appendChild(this.CreateInput(cellIndex, page));
+					td.appendChild(divInput);
+					
+					return td;
+				}
+				
+				this.CreateInput = function(cellIndex, page)
+				{
+					var condition = page.conditions[cellIndex];
+					var input = document.createElement("input");
+					this.FirstInputField = cellIndex == 0 ? input : this.FirstInputField;
+					input.setAttribute('id', 'ipt' + cellIndex);
+					var varName = condition[0]; // the variable name is always the first character in the condition
+					if(varName != 'a' &&  varName != 'b' && varName != 'c')
+					{
+						varName = condition.indexOf("a") > -1 ? "a" : '';
+						varName = condition.indexOf("b") > -1 ? "b" : varName;
+						varName = condition.indexOf("c") > -1 ? "c" : varName;
+					}
+					
+					var script = "var " + varName + " = this.value;";
+					script += "uiManager.SetCellColor(" + varName + "," + cellIndex + "," + condition + ");";
+					input.setAttribute('onchange', script);
+					return input;
+				}
+				
+				this.NextPage = function(btn)
+				{
+					if(this.CurrentPageIndex == this.AllPages.length - 1)
+					{
+						alert("You have reached to the last page");
+					}
+					else
+					{
+						if(this.CheckPage())
+						{
+							this.CurrentPageIndex += 1;
+							try
+							{
+								this.Clear();
+								this.BuildPage();
+							}
+							catch(e)
+							{
+								alert(e);
+							}
+
+							if(this.CurrentPageIndex == this.AllPages.length - 1)
+							{
+								btn.setAttribute('disabled','true');
+								btn.setAttribute('title', 'הגעת לדף האחרון');
+							}
+							
+						}
+						else
+						{
+							alert("To continute to the next page, please make sure all conditions were answered correctly")
+						}
+					}
+				}
+				
+				this.CheckPage = function()
+				{
+					var i = 0;
+					var validValue = true;
+					while(i < this.ValidAnswers.length && validValue)
+					{
+						validValue = this.ValidAnswers[i];
+						++i;
+					}
+					return validValue;
+				}
+
+				this.PreviousPage = function()
+				{
+					if(this.CurrentPageIndex == 0)
+					{
+						alert("You have reached to the first page");
+					}
+					else
+					{
+						this.CurrentPageIndex -= 1;
+						try
+						{
+						this.Clear();
+						this.BuildPage();
+						}
+						catch(e)
+						{
+							alert(e);
+						}
+					}
+				}
+				
+				this.Clear = function()
+				{
+					var i = 0;
+					while(i < this.Rows.length)
+					{
+						this.GameTable.removeChild(this.Rows[i]);
+						++i;
+					}
+					while(this.Rows.length > 0)
+					{
+						this.Rows.pop();
+					}
+
+					while(this.Cells.length > 0)
+					{
+						this.Cells.pop();
+						this.ValidAnswers.pop();
+					}
+				}
+			}
+
+			//if you wish to create more page, copy this..
+			var page1 = {
+							conditions: ['a > 20', 'c != 8', 'a > 5 && a < 45', 'b == 0', '!(b == 9 || b > 21)', 'c < 13', 'c == -5 || c > 0', 'b != 4 && b % 2 == 0', 'a >= 67 && a != 73']
+						};
+			var page2 = {
+							conditions: ['a > 28', 'c == 8', 'a < 35 && a > 4', 'b == 19', '!(b == 6 || b > 31)', 'c < -21', 'c == -5 || c > 0', 'b != 9 && b % 2 == 1', 'a >= 66 && a != 71']
+						};
+			var page3 = {
+							conditions: ['a >= 20', 'c != 0', 'a < 14 && a > 40', 'c == 45 || c < 44', '!(b == 9 || b > 21)', '!(c < 13)', 'c + 3 > 0', 'b != 4 && b % 2 == 0', 'a >= 22 && a != 31']
+						};
+			var page4 = {
+							conditions: ['a >= 41', 'c == 6', 'a < 23 && a > 17', 'b == 19 || b > 18', '!(b == 6 || b > 31)', '!(c < 21)', 'c == -5 || c > 0', 'b != 9 && b % 2 == 1', 'a >= 70 && a != 71']
+						};
+			var page5 = {
+							conditions: ['a >= 20', 'c != 0', 'a < 14 && a > 40', 'c == 45 || c < 44', '!(b == 9 || b > 21)', '!(c < 13)', 'c + 3 > 0', 'b != 4	 && b % 2 == 0', 'a >= 22 && a != 31']
+						};
+
+			var uiManager = new UIManager();
+			uiManager.AddPage(page1);
+			uiManager.AddPage(page2);
+			uiManager.AddPage(page3);
+			uiManager.AddPage(page4);
+			uiManager.AddPage(page5);
+		
+			uiManager.BuildPage();
+		</script>
+	</body>
+</html>
