@@ -1,4 +1,4 @@
-﻿<html>
+<html>
 <head>
 	<title>פעילות מדעי המחשב והנדסת תוכנה</title>
 	<meta charset="utf-8" />
@@ -73,6 +73,16 @@
 						<tr>
 							<td align="center"><img src="dubi.png" width="100" height="100" /></td>
 						</tr>
+						<tr>
+							<td align="center"><hr/></td>
+						</tr>
+						<tr><th style="padding-top:20px;">?</th></tr>
+						<tr>
+							<td align="center" style="border:1px dotted black;font-weight:bold;">
+								שרטוט מאת התלמיד/ה<br/>
+								will be continued...
+							</td>
+						</tr>
 					</table>
 				</td>
 				<td valign="top">
@@ -86,6 +96,7 @@
 						<div id="tdColors"></div>
 					</div>
 					<div align="center" style="padding-top:20px;padding-bottom:20px;" class="controlButtons">
+						<input type="button" id="addT" onclick="AddTInst();" value="פקודת משולש" title="הוספת פקודה לשרטוט משולש" />
 						<input type="button" id="addR" onclick="AddRInst();" value="פקודת מלבן" title="הוספת פקודה לשרטוט מלבן" />
 						<input type="button" id="addC" onclick="AddCInst();" value="פקודת עיגול" title="הוספת פקודה לשרטוט עיגול" />
 						<input type="button" id="clearButton" onclick="drawObject.clearRect(0, 0, canvas.width, canvas.height);" value="נקה קנבס" title="מחיקת הצורות המשורטטות במסגרת האדומה" />
@@ -128,6 +139,7 @@
     var canvas = document.getElementById("canvas");
     var addC = document.getElementById("addC");
     var addR = document.getElementById("addR");
+    var addT = document.getElementById("addT");
     var drawObject = canvas.getContext('2d');
     var cwidth = canvas.width;
 	var cheight = canvas.height;
@@ -151,6 +163,7 @@
 		AddColors();
 		AddCInst();
 		AddRInst();
+		AddTInst();
     }
 
 	function rand(x, y)
@@ -184,6 +197,16 @@
         var x = rand(0, cwidth - w);
         var y = rand(0, cheight - h);
         var command = `DrawRectangle(${x}, ${y}, ${w}, ${h}, ${c});`;
+        txtarea.value += "\n" + command;
+    }
+
+    function AddTInst() {
+        var c = GetShapeColor();
+        var h = rand(50, 80);
+        var a = rand(0, 360);
+        var x = rand(0, cwidth - h);
+        var y = rand(0, cheight - h);
+        var command = `DrawTriangle(${x}, ${y}, ${h}, ${a}, ${c});`;
         txtarea.value += "\n" + command;
     }
 
@@ -223,10 +246,9 @@
 			s.style.borderColor = "gold";
             s.style.borderSpacing = "0px 0px 0px 0px";
 			selectedColor = parseInt(s.getAttribute("ci"));
-            addC.style.border = "1px solid " + colors[selectedColor];
-            addC.style.color = colors[selectedColor];
-			addR.style.border = "1px solid " + colors[selectedColor];
-            addR.style.color = colors[selectedColor];
+			highlightBtn(addC);
+			highlightBtn(addR);
+			highlightBtn(addT);
 		}
 		else
 		{
@@ -234,13 +256,24 @@
 			s.style.borderColor = s.title;
             s.setAttribute("clicked", "0");
             selectedColor = -1
-            addC.style.border = "";
-			addC.style.color = "";
-			addR.style.border = "";
-			addR.style.color = "";
+			unselectBtn(addC);
+			unselectBtn(addR);
+			unselectBtn(addT);
         }
 
     }
+
+	function highlightBtn(btn)
+	{
+		btn.style.border = "1px solid " + colors[selectedColor];
+		btn.style.color = colors[selectedColor];
+	}
+	
+	function unselectBtn(btn)
+	{
+		btn.style.border = "";
+		btn.style.color = "";
+	}
 
     function keyHandler(e) {
         var TABKEY = 9;
@@ -258,6 +291,14 @@
         eval(txtarea.value);
     }
 
+    function DrawCircle(x, y, radius, color) {
+        drawObject.beginPath();									
+        drawObject.fillStyle = color;           				
+        drawObject.arc(x, y, radius, 0, 2 * Math.PI);   		
+        drawObject.fill();										
+        drawObject.closePath();									
+	}
+
     function DrawRectangle(x, y, width, height, color)
     {
         drawObject.beginPath();									
@@ -267,14 +308,19 @@
         drawObject.closePath();									
     }
 
-    function DrawCircle(x, y, radius, color) {
+    function DrawTriangle(x, y, height, angle, color)
+    {
+		var mid = height;
         drawObject.beginPath();									
-        drawObject.fillStyle = color;           				
-        drawObject.arc(x, y, radius, 0, 2 * Math.PI);   		
+        drawObject.fillStyle = color;
+		
+		angle = (180 - angle) / 180;
+		drawObject.moveTo(x + height * Math.sin(angle * Math.PI), y + height * Math.cos(angle * Math.PI));
+		drawObject.lineTo(x + height * Math.sin((angle + 1.5) * Math.PI), y + height * Math.cos((angle + 1.5) * Math.PI));
+		drawObject.lineTo(x + height * Math.sin((angle + 0.5) * Math.PI), y + height * Math.cos((angle + 0.5) * Math.PI));
         drawObject.fill();										
         drawObject.closePath();									
-
-	}
+    }
 
 	function ShowModal(modalId, btn)
 	{
