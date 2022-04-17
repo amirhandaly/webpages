@@ -6,25 +6,30 @@
 	</head>
 	<body dir="rtl">	
 		<center>
-		<table style="background-image:url(bg.png);border:1px blue solid;">
-			<tr>
-				<td style="width:600; height:400;" valign="middle" align="center">
-					<table border="1" style="background-color:white;">
-						<tr>
-							<td colspan="3" align="center" valign="bottom"><h3 id="h1Title"></h3></td>
-						</tr>
-						<tr>			
-							<td style="width:100px;" align="center"><h1 id="tdWord"> </h1></td>
-							<td style="width:100px;" align="center"><table><tr id="trTyping"></tr></table></td>
-							<td align="center"><button id="btnNext" onclick="nextWord()" >מילה הבאה</button></td>							
-						</tr>
-						<tr>
-							<td colspan="3" align="center" valign="bottom"><h3 id="h2Count"></h3></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
+		<div style="padding:10px 10px 10px 10px;border:1px blue solid;border-radius: 15px;width:600px;">
+			<table style="background-image:url(bg.png);border:3px blue solid;border-radius: 15px;">
+				<tr>
+					<td style="width:600; height:400;" valign="middle" align="center">
+						<table border="1" style="background-color:white;">
+							<tr>
+								<td colspan="3" align="center" valign="bottom"><h3 id="h1Title"></h3></td>
+							</tr>
+							<tr>			
+								<td style="width:200px;" align="center"><h1 id="tdWord"> </h1></td>
+								<td style="width:200px;" align="center"><table><tr id="trTyping"></tr></table></td>
+								<td align="center"><button id="btnNext" onclick="nextWord()">מילה הבאה</button></td>							
+							</tr>
+							<tr>
+								<td colspan="3" align="center" valign="bottom"><h3 id="h2Count"></h3></td>
+							</tr>
+							<tr>
+								<td colspan="3" align="center" valign="bottom"><h3 id="h3Stats"></h3></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		<div>
 		</center>
 	</body>
 	<script type="text/javascript">
@@ -36,7 +41,11 @@
 		function updateTitle()
 		{
 			word_len = DIC[row][0].length;
-			h1Title.innerHTML = "בכל מילה יש עכשיו  " + word_len + " אותיות";
+			h1Title.innerHTML = "בשלב זה יש " + DIC[row].length + " מילים סך הכל";
+			h1Title.innerHTML += "<br/>";
+			h1Title.innerHTML += "<br/>";
+			h1Title.innerHTML += " בכל מילה יש  " + word_len + " אותיות";
+			h1Title.innerHTML += "<br/>";
 		}
 		
 		function nextWord()
@@ -61,11 +70,13 @@
 			buildTyping(word);
 			h2Count.innerHTML = "עד עכשיו הקלדת " + words_count + " מילים.";
 			if(words_count > 0)
-			h2Count.innerHTML +="<br/><b>כל הכבוד ניר!!</b>";			
+				h2Count.innerHTML +="<br/><b>כל הכבוד ניר!!</b>";			
+				
+			h3Stats.innerHTML = (cell + 1) + "/" + DIC[row].length;
 		}
 		
 		function checkChar(x)
-		{
+		{			
 			if(x.getAttribute("ch") == x.value)
 			{
 				x.style.color = "green";
@@ -101,6 +112,8 @@
 				x = document.createElement("input");
 				inputs.push(x);
 				x.id = "inp" + i;
+				
+				x.setAttribute("maxlength", "1");
 				x.setAttribute("onchange", "checkChar(this);");
 				var next_id = "inp" + (i + 1);
 				x.setAttribute("onkeyup", "document.getElementById('" + next_id + "').focus();");
@@ -122,9 +135,11 @@
 			x.style.borderBottom = "0";
 			x.setAttribute("onchange", "");
 			x.setAttribute("onkeyup", "");
+			x.setAttribute("onkeypress", "if(event.key == 'Enter' && !btnNext.disabled) setTimeout('btnNext.click();',250);");
 
 			//x.style.display = "hidden";
 			x.value = " ";
+			inputs[0].focus();
 			
 		}
 		updateTitle();
