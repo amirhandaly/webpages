@@ -77,9 +77,11 @@
 		
 		function checkChar(x)
 		{			
+			
 			if(x.getAttribute("ch") == x.value)
 			{
 				x.style.color = "green";
+				x.setAttribute("readonly", "readonly");
 			}
 			else
 			{
@@ -101,6 +103,11 @@
 			}
 			return false;
 		}
+		function checkIfCanContinue()
+		{
+			if(event.key == 'Enter' && !btnNext.disabled) 
+				setTimeout('btnNext.click();',250);
+		}
 		function buildTyping(word)
 		{
 			trTyping.innerHTML = "";
@@ -115,6 +122,7 @@
 				
 				x.setAttribute("maxlength", "1");
 				x.setAttribute("onchange", "checkChar(this);");
+				x.setAttribute("onkeypress", "checkIfCanContinue();");
 				var next_id = "inp" + (i + 1);
 				x.setAttribute("onkeyup", "document.getElementById('" + next_id + "').focus();");
 				x.setAttribute("ch", word[i]);
@@ -135,7 +143,7 @@
 			x.style.borderBottom = "0";
 			x.setAttribute("onchange", "");
 			x.setAttribute("onkeyup", "");
-			x.setAttribute("onkeypress", "if(event.key == 'Enter' && !btnNext.disabled) setTimeout('btnNext.click();',250);");
+			x.setAttribute("onkeypress", "checkIfCanContinue();");
 
 			//x.style.display = "hidden";
 			x.value = " ";
