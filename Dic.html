@@ -5,14 +5,20 @@
 		<title>מילים עבור ניר המקסים</title>
 	</head>
 	<body dir="rtl">	
+		<style>
+		</style>
 		<center>
 		<div style="padding:10px 10px 10px 10px;border:1px blue solid;border-radius: 15px;width:600px;">
 			<table style="background-image:url(bg.png);border:3px blue solid;border-radius: 15px;">
 				<tr>
 					<td style="width:600; height:400;" valign="middle" align="center">
-						<table border="1" style="background-color:white;">
+						<table border="0" style="background-color:white;border:1px red solid;">
 							<tr>
-								<td colspan="3" align="center" valign="bottom"><h3 id="h1Title"></h3></td>
+								<td colspan="3" align="center" valign="bottom" style="border-bottom: 1px solid black;">
+									שלבים: <select id="selStages" onchange="changeStage();"></select>
+									<br/>
+									<h3 id="h1Title"></h3>
+								</td>
 							</tr>
 							<tr>			
 								<td style="width:200px;" align="center"><h1 id="tdWord"> </h1></td>
@@ -20,10 +26,11 @@
 								<td align="center"><button id="btnNext" onclick="nextWord()">מילה הבאה</button></td>							
 							</tr>
 							<tr>
-								<td colspan="3" align="center" valign="bottom"><h3 id="h2Count"></h3></td>
-							</tr>
-							<tr>
-								<td colspan="3" align="center" valign="bottom"><h3 id="h3Stats"></h3></td>
+								<td colspan="3" align="center" valign="bottom" style="border-top: 1px solid black;padding-top:5px;">
+									<h3 id="h2Count"></h3>
+									<br/>
+									<h3 id="h3Stats"></h3>									
+								</td>
 							</tr>
 						</table>
 					</td>
@@ -33,11 +40,35 @@
 		</center>
 	</body>
 	<script type="text/javascript">
+		var stages = ["א", "ב", "ג", "ד", "ה"];
+		
 		var row = 0;
 		var cell = -1;
 		var word_len = 0;
 		var inputs = [];
 		var words_count = -1;
+		
+		
+		function changeStage()
+		{
+			row = parseInt(selStages.value);
+			cell = -1;
+			words_count--;
+			updateTitle();
+			nextWord();
+		}
+		
+		function buildStages()
+		{
+			for(var i = 0, x = DIC[0][0].length; i < DIC.length; i++, x++)
+			{
+				var option = document.createElement("option");
+				option.value = i;
+				option.innerHTML = "שלב " + stages[i] + ": " + x + " אותיות " + " - " + DIC[i].length + " מילים";
+				selStages.appendChild(option);
+			}
+		}
+		
 		function updateTitle()
 		{
 			word_len = DIC[row][0].length;
@@ -103,10 +134,59 @@
 			}
 			return false;
 		}
-		function checkIfCanContinue()
+		function processKey(inp)
 		{
 			if(event.key == 'Enter' && !btnNext.disabled) 
 				setTimeout('btnNext.click();',250);
+		}
+		
+		function keyUp(inp, inpIndex)
+		{
+			//alert(event.key);
+			switch(event.key)
+			{
+				case 'F1':			
+				case 'F2':			
+				case 'F3':			
+				case 'F4':			
+				case 'F5':			
+				case 'F6':			
+				case 'F7':			
+				case 'F8':			
+				case 'F9':			
+				case 'F10':			
+				case 'F11':			
+				case 'F12':			
+				case 'CapsLock':			
+				case 'Tab':			
+				case 'Alt':			
+				case 'Control':			
+				case 'Escape':			
+				case 'Shift':			
+				case 'Backspace':			
+				case 'Delete':			
+				case 'Home':			
+				case 'Insert':			
+				case 'End':			
+				case 'ArrowUp':			
+				case 'ArrowDown':			
+				case 'PageUp':			
+				case 'PageDown':			
+					break;
+				case 'ArrowRight':			
+					if(inpIndex > 0)
+						inputs[inpIndex - 1].focus();
+					break;
+				
+				case 'ArrowLeft':			
+					if(inpIndex < inputs.length - 1)
+						inputs[inpIndex + 1].focus();
+					break;
+				
+				default:
+					inputs[inpIndex + 1].focus();
+					break;					
+			}
 		}
 		function buildTyping(word)
 		{
@@ -122,9 +202,8 @@
 				
 				x.setAttribute("maxlength", "1");
 				x.setAttribute("onchange", "checkChar(this);");
-				x.setAttribute("onkeypress", "checkIfCanContinue();");
-				var next_id = "inp" + (i + 1);
-				x.setAttribute("onkeyup", "document.getElementById('" + next_id + "').focus();");
+				x.setAttribute("onkeypress", "processKey(this);");
+				x.setAttribute("onkeyup", "keyUp(this, " + i + ");");
 				x.setAttribute("ch", word[i]);
 				x.style.borderTop = "0";
 				x.style.borderLeft = "0";
@@ -142,8 +221,8 @@
 			x.style.width=1;
 			x.style.borderBottom = "0";
 			x.setAttribute("onchange", "");
-			x.setAttribute("onkeyup", "");
-			x.setAttribute("onkeypress", "checkIfCanContinue();");
+			//x.setAttribute("onkeyup", "");
+			x.setAttribute("onkeypress", "processKey(this);");
 
 			//x.style.display = "hidden";
 			x.value = " ";
@@ -151,6 +230,7 @@
 			
 		}
 		updateTitle();
+		buildStages();
 		nextWord();
 	</script>
 
