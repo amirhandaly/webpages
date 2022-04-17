@@ -8,11 +8,11 @@
 		<style>
 		</style>
 		<center>
-		<div style="padding:10px 10px 10px 10px;border:1px blue solid;border-radius: 15px;width:700;">
-			<table style="background-image:url(bg.png);border:3px blue solid;border-radius: 15px;">
+		<div style="padding:10px 10px 10px 10px;border:1px blue solid;border-radius: 5px;width:700;">
+			<table style="background-image:url(bg.png);border:3px blue solid;">
 				<tr>
 					<td style="width:700; height:500;" valign="middle" align="center">
-						<table border="0" style="background-color:white;border:1px red solid;">
+						<table border="0" style="background-color:white;border:1px red solid;padding:5px 5px 5px 5px;">
 							<tr>
 								<td colspan="3" align="center" valign="bottom" style="border-bottom: 1px solid black;">
 									שלבים: <select id="selStages" onchange="changeStage();"></select>
@@ -22,7 +22,7 @@
 							</tr>
 							<tr>			
 								<td style="width:200px;" align="center"><h1 id="tdWord"> </h1></td>
-								<td style="width:200px;" align="center"><table><tr id="trTyping"></tr></table></td>
+								<td style="width:200px;" align="right"><table><tr id="trTyping"></tr></table></td>
 								<td align="center"><button id="btnNext" onclick="nextWord()">מילה הבאה</button></td>							
 							</tr>
 							<tr>
@@ -88,6 +88,7 @@
 				row++;
 				if(row < DIC.length)				
 				{
+					selStages.value = row;
 					cell = 0;
 					updateTitle();
 				}					
@@ -134,7 +135,7 @@
 			}
 			return false;
 		}
-		function processKey(inp)
+		function processKey(inp, inpIndex)
 		{
 			if(event.key == 'Enter' && !btnNext.disabled) 
 				setTimeout('btnNext.click();',250);
@@ -163,7 +164,6 @@
 				case 'Control':			
 				case 'Escape':			
 				case 'Shift':			
-				case 'Backspace':			
 				case 'Delete':			
 				case 'Home':			
 				case 'Insert':			
@@ -172,6 +172,10 @@
 				case 'ArrowDown':			
 				case 'PageUp':			
 				case 'PageDown':			
+					break;
+				case 'Backspace':			
+					if((inp.value == "" && inpIndex > 0) || inpIndex == inputs.length - 1)
+						inputs[inpIndex - 1].focus();				
 					break;
 				case 'ArrowRight':			
 					if(inpIndex > 0)
@@ -184,7 +188,8 @@
 					break;
 				
 				default:
-					inputs[inpIndex + 1].focus();
+					if(inpIndex < inputs.length - 1)
+						inputs[inpIndex + 1].focus();
 					break;					
 			}
 		}
@@ -202,7 +207,7 @@
 				
 				x.setAttribute("maxlength", "1");
 				x.setAttribute("onchange", "checkChar(this);");
-				x.setAttribute("onkeypress", "processKey(this);");
+				x.setAttribute("onkeypress", "processKey(this, " + i + ");");
 				x.setAttribute("onkeyup", "keyUp(this, " + i + ");");
 				x.setAttribute("ch", word[i]);
 				x.style.borderTop = "0";
@@ -212,19 +217,16 @@
 				x.style.fontSize = 25;
 				x.style.fontFamily = "david";
 				x.style.fontWeight = "bold";
-				//x.style.color = "green";
 				var td = document.createElement("td");
 				td.appendChild(x);
 				trTyping.appendChild(td);
 			}
 			
-			x.style.width=1;
+			x.style.width = 1;
 			x.style.borderBottom = "0";
 			x.setAttribute("onchange", "");
-			//x.setAttribute("onkeyup", "");
-			x.setAttribute("onkeypress", "processKey(this);");
+			x.setAttribute("readonly", "readonly");
 
-			//x.style.display = "hidden";
 			x.value = " ";
 			inputs[0].focus();
 			
