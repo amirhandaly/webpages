@@ -1,0 +1,134 @@
+<html>
+	<head>
+		<script type="text/javascript" src="dic.js">
+		</script>
+		<title>מילים עבור ניר המקסים</title>
+	</head>
+	<body dir="rtl">	
+		<center>
+		<table style="background-image:url(bg.png);border:1px blue solid;">
+			<tr>
+				<td style="width:600; height:400;" valign="middle" align="center">
+					<table border="1" style="background-color:white;">
+						<tr>
+							<td colspan="3" align="center" valign="bottom"><h3 id="h1Title"></h3></td>
+						</tr>
+						<tr>			
+							<td style="width:100px;" align="center"><h1 id="tdWord"> </h1></td>
+							<td style="width:100px;" align="center"><table><tr id="trTyping"></tr></table></td>
+							<td align="center"><button id="btnNext" onclick="nextWord()" >מילה הבאה</button></td>							
+						</tr>
+						<tr>
+							<td colspan="3" align="center" valign="bottom"><h3 id="h2Count"></h3></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		</center>
+	</body>
+	<script type="text/javascript">
+		var row = 0;
+		var cell = -1;
+		var word_len = 0;
+		var inputs = [];
+		var words_count = -1;
+		function updateTitle()
+		{
+			word_len = DIC[row][0].length;
+			h1Title.innerHTML = "בכל מילה יש עכשיו  " + word_len + " אותיות";
+		}
+		
+		function nextWord()
+		{
+			words_count++;
+			cell++;
+			if(cell == DIC[row].length)
+			{
+				row++;
+				if(row < DIC.length)				
+				{
+					cell = 0;
+					updateTitle();
+				}					
+				else
+					return;
+			}
+			
+			btnNext.disabled = true;			
+			var word = DIC[row][cell];
+			tdWord.innerHTML = word;	
+			buildTyping(word);
+			h2Count.innerHTML = "עד עכשיו הקלדת " + words_count + " מילים.";
+			if(words_count > 0)
+			h2Count.innerHTML +="<br/><b>כל הכבוד ניר!!</b>";			
+		}
+		
+		function checkChar(x)
+		{
+			if(x.getAttribute("ch") == x.value)
+			{
+				x.style.color = "green";
+			}
+			else
+			{
+				x.style.color = "red";
+			}
+			
+			btnNext.disabled = typedError();
+				
+			//console.log(x.value);
+		}
+		
+		function typedError()
+		{
+			for(var i = 0; i < inputs.length; i++)
+			{
+				var x = inputs[i];
+				if(x.getAttribute("ch") != x.value)
+					return true;
+			}
+			return false;
+		}
+		function buildTyping(word)
+		{
+			trTyping.innerHTML = "";
+			inputs = []
+			word += " ";
+			var x = null;
+			for(var i = 0; i < word.length; i++)
+			{
+				x = document.createElement("input");
+				inputs.push(x);
+				x.id = "inp" + i;
+				x.setAttribute("onchange", "checkChar(this);");
+				var next_id = "inp" + (i + 1);
+				x.setAttribute("onkeyup", "document.getElementById('" + next_id + "').focus();");
+				x.setAttribute("ch", word[i]);
+				x.style.borderTop = "0";
+				x.style.borderLeft = "0";
+				x.style.borderRight = "0";
+				x.style.width = 20;
+				x.style.fontSize = 25;
+				x.style.fontFamily = "david";
+				x.style.fontWeight = "bold";
+				//x.style.color = "green";
+				var td = document.createElement("td");
+				td.appendChild(x);
+				trTyping.appendChild(td);
+			}
+			
+			x.style.width=1;
+			x.style.borderBottom = "0";
+			x.setAttribute("onchange", "");
+			x.setAttribute("onkeyup", "");
+
+			//x.style.display = "hidden";
+			x.value = " ";
+			
+		}
+		updateTitle();
+		nextWord();
+	</script>
+
+</html>
